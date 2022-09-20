@@ -9,6 +9,7 @@ public class MassivePrimitive {
         }
 
 
+
         // ==============
 
         String[] colors = {"Красный", "Оранжевый", "Желтый"};
