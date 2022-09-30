@@ -1,0 +1,59 @@
+package practice;
+
+public class BankAccount {
+
+  private double accountBank = 0;
+
+  public double getAmount() {
+    return accountBank;
+  }
+
+  public void put(double amountToPut) {
+    if (amountToPut >= 0) {
+    accountBank += amountToPut;
+    }
+  }
+
+  public void take(double amountToTake) {
+    if (amountToTake < accountBank) {
+      accountBank -= amountToTake;
+    }
+  }
+}
+
+//---------------------
+
+package practice;
+
+public class CardAccount extends BankAccount {
+
+    @Override
+    public void take(double amountToTake) {
+        amountToTake += amountToTake * 0.01;
+        super.take(amountToTake);
+    }
+}
+
+//---------------------
+
+package practice;
+import java.time.LocalDate;
+
+public class DepositAccount extends BankAccount {
+     private LocalDate lastIncome;
+
+    @Override
+    public void put(double amountToPut) {
+        lastIncome = LocalDate.now();
+        super.put(amountToPut);
+    }
+
+    @Override
+    public void take(double amountToTake) {
+        LocalDate lastTake = LocalDate.now();
+        if (lastTake.isEqual(lastIncome.plusMonths(1)) || lastTake.isAfter(lastIncome.plusMonths(1))) {
+        super.take(amountToTake);
+        }
+    }
+}
+
