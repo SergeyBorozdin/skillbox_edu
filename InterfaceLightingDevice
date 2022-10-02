@@ -1,0 +1,135 @@
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class Main {
+
+    public static void main(String[] args) {
+        ArrayList<Lamp> lampList = new ArrayList<>();
+        lampList.add(new Lamp(100));
+        lampList.add(new Lamp(60));
+        lampList.add(new Lamp(80));
+        lampList.add(new Lamp(20));
+
+        Collections.sort(lampList);
+
+        for (Lamp lamp:lampList) {
+            System.out.println(lamp);
+        }
+    }
+}
+//---------------------
+
+public interface ElectricDevice {
+
+    boolean isSwitchedOn();
+
+    double getEnergyConsumption();
+
+    void switchOn();
+
+    void switchOff();
+
+    default void toggle() {
+        if (isSwitchedOn()) {
+            switchOff();
+        } else {
+            switchOn();
+        }
+    }
+}
+
+//----------------------
+
+abstract class LightingDevice implements ElectricDevice, Comparable {
+
+
+    public static final double MAX_BRIGHTNESS = 1D;
+    public static final double MIN_BRIGHTNESS = 0D;
+
+    protected final int power;
+    protected double brightness;
+
+    public LightingDevice(int power) {
+        this.power = power;
+    }
+
+    @Override
+    public boolean isSwitchedOn() {
+        return brightness > 0;
+    }
+
+    @Override
+    public void switchOn() {
+        setBrightness(MAX_BRIGHTNESS);
+    }
+
+    @Override
+    public void switchOff() {
+        setBrightness(MIN_BRIGHTNESS);
+    }
+
+    public void setBrightness (double level) {
+        if (level < MIN_BRIGHTNESS) { brightness = MIN_BRIGHTNESS; }
+        else if (level >  MAX_BRIGHTNESS) { brightness = MAX_BRIGHTNESS; }
+        else {brightness = level; }
+    }
+
+    public double getBrightness () { return brightness;}
+
+    public void changeBrightness (double rate) {
+        double changed = brightness + brightness * rate;
+        setBrightness(changed);
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        LightingDevice device = (LightingDevice) o;
+        return Integer.compare(power, device.power);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getName() +" power - " + power;
+    }
+}
+
+//--------------------
+
+
+public class Lamp extends LightingDevice {
+
+    public Lamp(int power) {
+        super(power);
+    }
+
+    @Override
+    public double getEnergyConsumption () { return power * brightness; }
+
+}
+
+//--------------------
+
+  public class Chandelier extends LightingDevice{
+
+    public static final int LAMP_BRIGHTNESS_STEP = 2;
+    public static final double CONSUMPTION_COEF = 1.095;
+
+    private final int lampCount;
+
+    public Chandelier(int lampCount, int power) {
+        super(power);
+        this.lampCount = lampCount;
+
+    }
+
+    @Override
+    public void setBrightness (double level) {
+        double step = 1.0 / (lampCount * LAMP_BRIGHTNESS_STEP);
+        int stepCounts = (int) Math.round(level / step);
+        super.setBrightness(stepCounts * step);
+    }
+
+    @Override
+    public double getEnergyConsumption () { return power * Math.pow(brightness, CONSUMPTION_COEF); }
+
+}
