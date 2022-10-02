@@ -3,6 +3,24 @@ import java.util.Collections;
 
 public class Main {
 
+        TreeSet<LightingDevice> lightingDevices = new TreeSet<>(new Comparator<LightingDevice>() {
+            @Override
+            public int compare(LightingDevice o1, LightingDevice o2) {
+                return Integer.compare(o1.getPower(), o2.getPower());
+            }
+        });
+
+        LightingDevice device = new LightingDevice(400) {
+            @Override
+            public double getEnergyConsumption() {
+                return power * brightness;
+            }
+        };
+
+
+        Lamp lamps = new Lamp(40);
+        lamps.setType(Lamp.Type.INCANDESCENT);
+
     public static void main(String[] args) {
         ArrayList<Lamp> lampList = new ArrayList<>();
         lampList.add(new Lamp(100));
@@ -97,6 +115,15 @@ abstract class LightingDevice implements ElectricDevice, Comparable {
 
 
 public class Lamp extends LightingDevice {
+
+    private Type type;
+
+    public enum Type {
+        INCANDESCENT,
+        FILAMENT,
+        LED,
+        LUMINESCENT
+    }
 
     public Lamp(int power) {
         super(power);
