@@ -133,3 +133,51 @@ public class Lamp extends LightingDevice {
     public double getEnergyConsumption () { return power * Math.pow(brightness, CONSUMPTION_COEF); }
 
 }
+
+// ---------------- polimorfizm
+
+import java.util.ArrayList;
+
+public class SmartHouse {
+
+    private ArrayList<ElectricDevice> devices;
+
+    public SmartHouse () {
+        devices = new ArrayList<>();
+        initLightingDevices();
+    }
+
+    private void initLightingDevices() {
+        devices.add(new Lamp(20));
+        devices.add(new Lamp(80));
+        devices.add(new Lamp(100));
+        devices.add(new Chandelier(2, 20));
+        devices.add(new Chandelier(3, 40));
+        devices.add(new Chandelier(1, 70));
+        devices.add(new Chandelier(5, 35));
+    }
+
+    public double getEnergyConsumption() {
+        double sum = 0;
+        for (ElectricDevice device : devices) {
+            sum += device.getEnergyConsumption();
+        }
+        return sum;
+    }
+
+    public void switchOffAllDevices () {
+        for (ElectricDevice device: devices) {
+            device.switchOff();
+        }
+    }
+
+    public void switchOffAllLighting () {
+        for (ElectricDevice device: devices) {
+            if (device instanceof LightingDevice) {
+                device.switchOff();
+            }
+        }
+    }
+
+}
+
