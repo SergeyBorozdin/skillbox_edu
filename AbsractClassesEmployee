@@ -1,0 +1,188 @@
+public class Main {
+
+    public static void main(String[] args) {
+
+        Company company = new Company();
+        for (int i = 0; i < 180; i++) {
+            company.hire(new Operator(40_000.0));
+            if (i < 10) {
+                company.hire(new TopManager( 150_000));
+            }
+            if (i < 80) {
+                company.hire(new Manager( 70_000));
+            }
+        }
+
+        for (Employee salary : company.getTopSalaryStaff(15)) {
+            System.out.println(salary);
+        }
+
+        for (Employee salary : company.getLowestSalaryStaff(30)) {
+            System.out.println(salary);
+        }
+
+        System.out.println();
+        System.out.println(company.getIncome());
+        System.out.println("===============================");
+        System.out.println(company.employeesCompany.size());
+        System.out.println();
+
+        for (int i = company.employeesCompany.size() - 1; i >= 0; i = i - 2) {
+            company.fire(company.employeesCompany.get(i));
+        }
+
+        for (Employee salary : company.getTopSalaryStaff(15)) {
+            System.out.println(salary);
+        }
+
+        for (Employee salary : company.getLowestSalaryStaff(30)) {
+            System.out.println(salary);
+        }
+
+        System.out.println();
+        System.out.println(company.employeesCompany.size());
+        System.out.println(company.getIncome());
+    }
+}
+
+
+//===========================
+
+public interface Employee {
+    double getMonthSalary();
+}
+
+//===========================
+
+import java.util.*;
+
+public class Company {
+
+    static List<Employee> employeesCompany = new ArrayList<>();
+
+    public void hire(Employee employee) {
+        employeesCompany.add(employee);
+    }
+
+    public void hireAll(Collection<Employee> employes) {
+        employeesCompany.addAll(employes);
+    }
+
+    public void fire(Employee employee) {
+        employeesCompany.remove(employee);
+    }
+
+    public static int getIncome() {
+        int sum = 0;
+        for (Employee employee : employeesCompany) {
+            if (employee.getClass().equals(Manager.class)){
+                sum += ((Manager) employee).getTurnoverManager();
+            }
+        }
+        return sum;
+    }
+
+    public List<Employee> getTopSalaryStaff(int count) {
+        List<Employee> topSalary = new ArrayList<>();
+        List<Employee> sortSalaryList = new ArrayList<>(getSortSalary());
+        for (int i = sortSalaryList.size() - 1; i > sortSalaryList.size() - 1 - count; i--) {
+            topSalary.add(sortSalaryList.get(i));
+        }
+        return topSalary;
+    }
+
+    public List<Employee> getLowestSalaryStaff(int count) {
+        List<Employee> topSalary = new ArrayList<>();
+        List<Employee> sortSalaryList = new ArrayList<>(getSortSalary());
+        for (int i = 0; i < count; i++) {
+            topSalary.add(sortSalaryList.get(i));
+        }
+        return topSalary;
+    }
+
+    public List<Employee> getSortSalary () {
+        List<Employee> copyEmployeesCompany = new ArrayList<>(employeesCompany);
+        Collections.sort(copyEmployeesCompany, new Comparator<Employee>() {
+            @Override
+            public int compare(Employee o1, Employee o2) {
+                return Double.compare(o1.getMonthSalary(), o2.getMonthSalary());
+            }
+        });
+        return copyEmployeesCompany;
+    }
+}
+
+
+//===========================
+
+public class TopManager implements Employee{
+
+    private double salary;
+    private double bonus;
+
+    public TopManager(double salary) {
+        this.salary = salary;
+    }
+
+    @Override
+    public double getMonthSalary() {
+        bonus = Company.getIncome() > 10_000_000 ?  salary + salary * 0.5 : 0;
+        return salary + bonus;
+    }
+
+    @Override
+    public String toString() {
+        return (int) getMonthSalary() + " rub";
+    }
+}
+
+
+//===========================
+
+public class Manager implements Employee {
+
+    private double salary;
+    private double turnoverManager;
+    public Manager(double salary) {
+        this.salary = salary;
+        turnoverManager = 115_000 +  (int)Math.round(Math.random() * 35_000);
+    }
+
+    @Override
+    public double getMonthSalary() {
+        return turnoverManager * 0.05 + salary;
+    }
+
+    public double getTurnoverManager() {
+        return turnoverManager;
+    }
+
+    @Override
+    public String toString() {
+        return (int) getMonthSalary() + " rub";
+    }
+}
+
+//===========================
+
+public class Operator implements Employee {
+
+    private double salary;
+
+    public Operator(double salary) {
+        this.salary = salary;
+    }
+
+    @Override
+    public double getMonthSalary() {
+        return salary;
+    }
+
+    @Override
+    public String toString() {
+        return (int) getMonthSalary() + " rub";
+    }
+}
+
+
+//===========================
