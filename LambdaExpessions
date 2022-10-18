@@ -25,6 +25,10 @@ public class Main {
         
         // получение стрима и работа с фильтром
         staff.stream().filter(employee -> employee.getSalary() >= 100_000).forEach(System.out::println);
+        
+        //получить стрим интеджеров
+        Stream<Integer> integerStream = Stream.of(1,2,3,4,5,6,7,8,9,10);
+        integerStream.filter(n -> n % 2 == 0).forEach(System.out::println);
 
     }
 
