@@ -22,6 +22,9 @@ public class Main {
         System.out.println("new");
         staff.forEach(e -> e.setSalary(e.getSalary() + salaryIncrease));
         staff.forEach(System.out::println);
+        
+        // получение стрима и работа с фильтром
+        staff.stream().filter(employee -> employee.getSalary() >= 100_000).forEach(System.out::println);
 
     }
 
