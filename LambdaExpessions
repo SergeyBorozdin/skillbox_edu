@@ -38,6 +38,10 @@ public class Main {
         staff.stream().sorted(Comparator.comparing(Employee::getSalary))
                 .forEach(System.out::println);
                 
+                
+        //поиск максимального и печать если он есть
+        staff.stream().max(Comparator.comparing(Employee::getSalary))
+                .ifPresent(System.out::println);
 
     }
 
