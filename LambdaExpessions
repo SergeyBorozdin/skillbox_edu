@@ -189,3 +189,46 @@ staff.txt
 Татьяна Рыхальская	95000	10.10.2018
 Анастасия Бернадо	78000	05.06.2015
 Евгений Алфёров	105000	12.08.2016
+
+
+
+
+
+// задание для проверки
+// напишите код, который должен выделить сотрудников, пришедших в выбранном году, и среди них выявить сотрудника с максимальным значением заработной платы.
+public class Main {
+
+    private static final String STAFF_TXT = "data/staff.txt";
+
+    public static void main(String[] args) {
+        List<Employee> staff = Employee.loadStaffFromFile(STAFF_TXT);
+        Employee employeeMaxSalary = findEmployeeWithHighestSalary(staff, 2017);
+        System.out.println(employeeMaxSalary);
+    }
+
+    public static Employee findEmployeeWithHighestSalary(List<Employee> staff, int year) {
+        //TODO Метод должен вернуть сотрудника с максимальной зарплатой среди тех,
+        // кто пришёл в году, указанном в переменной year
+        Employee employee = null;
+        LocalDate year2017 = LocalDate.of(year, 1, 1);
+        Optional<Employee> optional = staff.stream()
+                .filter(e -> e.getWorkStart().after(localDateToDate(year2017))
+                        && e.getWorkStart().before(localDateToDate(year2017.plusYears(1))))
+                .max(Comparator.comparing(Employee::getSalary));
+        if (optional.isPresent()) {
+            employee = optional.get();
+        }
+        return employee;
+    }
+
+    public static LocalDate dateToLocalDate(Date d) {
+        Instant instant = d.toInstant();
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+        return localDateTime.toLocalDate();
+    }
+
+    public static Date localDateToDate(LocalDate localDate) {
+        Instant instant = localDate.atStartOfDay().atZone( ZoneId.systemDefault()).toInstant();
+        return Date.from(instant);
+    }
+}
