@@ -232,3 +232,16 @@ public class Main {
         return Date.from(instant);
     }
 }
+
+//еще один вариант решения 
+public static Employee findEmployeeWithHighestSalary(List<Employee> staff, int year) {
+       return staff.stream()
+           .filter((e) -> {
+               Calendar calendar = Calendar.getInstance();
+               calendar.setTime(e.getWorkStart());
+               return calendar.get(Calendar.YEAR) == year;
+           })
+           .max((e1, e2) ->
+               e1.getSalary().compareTo(e2.getSalary()))
+           .get();
+   }
