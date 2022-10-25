@@ -42,6 +42,12 @@ public class Main {
         //поиск максимального и печать если он есть
         staff.stream().max(Comparator.comparing(Employee::getSalary))
                 .ifPresent(System.out::println);
+                
+        // через map получаем, фильтруем, суммируем
+        staff.stream().map(e -> e.getSalary())
+                .filter(s -> s >= 100_000)
+                .reduce((s1, s2) -> s1 + s2)
+                .ifPresent(System.out::println);
 
     }
 
