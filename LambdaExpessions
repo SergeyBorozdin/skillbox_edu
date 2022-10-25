@@ -44,7 +44,8 @@ public class Main {
                 .ifPresent(System.out::println);
                 
         // через map получаем, фильтруем, суммируем
-        staff.stream().map(e -> e.getSalary())
+        staff.stream()
+                .map(e -> e.getSalary())
                 .filter(s -> s >= 100_000)
                 .reduce((s1, s2) -> s1 + s2)
                 .ifPresent(System.out::println);
